@@ -33,7 +33,7 @@ exports.getGenres = async (req, res, next) => {
         'Authorization': 'Bearer ' + response.data.access_token
       }
     })
-    const allGenres = genresResponse.data.genres 
+    const allGenres = genresResponse.data.genres
     const genres = getRandomGenres(allGenres)
     res.send(genres)
   } catch (error) {
@@ -64,23 +64,33 @@ exports.getSongs = async (req, res, next) => {
     );
     const genre = req.query.genre
     console.log(req)
-    const songsResponse = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=track`, {
+    const songsResponse = await axios.get(`https://api.spotify.com/v1/search?q=genre:${genre}&type=track&limit=4`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + response.data.access_token
       }
     })
     const songs = songsResponse.data
-
-    res.send(songs)
+    const parsedResponse = []
+    for (let i = 0; i < 4; i++) {
+      parsedResponse.push({
+        artist: songs.tracks.items[i].album.artists[0].name,
+        image: songs.tracks.items[i].album.images[0].url,
+        song: songs.tracks.items[i].name,
+        audio: songs.tracks.items[i].preview_url
+      })
+    }
+    res.send(parsedResponse)
   } catch (error) {
     console.log(error);
     res.send(error)
   }
 }
+
 function getRandomGenres(array) {
   const indexOne = Math.floor(Math.random() * array.length)
-  array.splice(indexOne,1)
+  array.splice(indexOne, 1)
   const indexTwo = Math.floor(Math.random() * array.length)
-  return [array[indexOne],array[indexTwo]]
+  return [array[indexOne], array[indexTwo]]
 }
+
