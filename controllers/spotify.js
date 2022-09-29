@@ -34,7 +34,11 @@ exports.getGenres = async (req, res, next) => {
       }
     })
     const allGenres = genresResponse.data.genres
+    
     const genres = getRandomGenres(allGenres)
+    
+
+    
     res.send(genres)
   } catch (error) {
     console.log(error);
@@ -72,7 +76,6 @@ exports.getSongs = async (req, res, next) => {
       }
     })
     const songs = songsResponse.data
-
     const songsPreview = songs.tracks.items.filter((e) => e.preview_url !== null)
 
     const parsedResponse = []
@@ -93,9 +96,14 @@ exports.getSongs = async (req, res, next) => {
 }
 
 function getRandomGenres(array) {
-  const indexOne = Math.floor(Math.random() * array.length)
-  array.splice(indexOne, 1)
-  const indexTwo = Math.floor(Math.random() * array.length)
-  return [array[indexOne], array[indexTwo]]
+  const indexOne = Math.floor(Math.random() * (array.length - 1))
+  
+  const firstGenre = array.splice(indexOne, 1) [0]
+
+  const indexTwo = Math.floor(Math.random() * (array.length - 1))
+
+  const secondGenre = array.splice(indexTwo,1) [0]
+
+  return [firstGenre, secondGenre]
 }
 
